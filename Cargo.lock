@@ -413,7 +413,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "skyak_axum_core"
+name = "skyaktech_axum_core"
 version = "0.1.0"
 dependencies = [
  "axum",
