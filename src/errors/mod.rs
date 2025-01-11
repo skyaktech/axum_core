@@ -12,7 +12,7 @@ use serde::Serialize;
 /// # Examples
 ///
 /// ```
-/// use skyaktech_axum_core::errors::ApiError;
+/// use skyak_axum_core::errors::ApiError;
 ///
 /// // With custom error message
 /// let not_found = ApiError::NotFound(Some("User profile not found".to_string()));

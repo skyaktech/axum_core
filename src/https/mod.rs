@@ -10,8 +10,8 @@ use axum::Json;
 /// # Examples
 ///
 /// ```
-/// use skyaktech_axum_core::https::ApiResponse;
-/// use skyaktech_axum_core::errors::ApiError;
+/// use skyak_axum_core::https::ApiResponse;
+/// use skyak_axum_core::errors::ApiError;
 /// use axum::Json;
 ///
 /// async fn example_route() -> ApiResponse<String> {

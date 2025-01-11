@@ -1,12 +1,15 @@
 [package]
-name = "skyaktech_axum_core"
+name = "skyak_axum_core"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/skyaktech/axum_core"
 authors = ["Nebojsa Jakovljevic nebojsa@nebjak.dev"]
 license = "MIT"
+description = "Core utilities and extensions for Axum web framework"
+keywords = ["axum", "web", "framework", "core"]
+categories = ["web-programming"]
+readme = "README.md"
 
 [dependencies]
 axum = "0.8"
-tokio = "1"
 serde = { version = "1.0", features = ["derive"] }
