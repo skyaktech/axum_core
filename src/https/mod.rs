@@ -98,6 +98,10 @@ pub fn success<T>(data: T) -> ApiResponse<T> {
 /// }
 ///
 /// // Handling a result that might fail
+/// fn some_fallible_operation() -> Result<String, ()> {
+///   Err(())
+/// }
+///
 /// async fn handle_operation() -> ApiResponse<String> {
 ///     let result = some_fallible_operation();
 ///     match result {
