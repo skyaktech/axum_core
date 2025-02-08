@@ -23,7 +23,7 @@ use serde::Serialize;
 /// // Custom status code
 /// let teapot = ApiError::Other(418, Some("I'm a teapot".to_string()));
 /// ```
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub enum ApiError {
     BadRequest(Option<String>),
     NotFound(Option<String>),
