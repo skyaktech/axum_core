@@ -1,5 +1,5 @@
-use skyak_axum_core::https;
 use skyak_axum_core::errors;
+use skyak_axum_core::https;
 
 #[tokio::test]
 async fn test_success() {
