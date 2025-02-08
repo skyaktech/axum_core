@@ -8,7 +8,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-skyak_axum_core = "0.1.0"
+skyak_axum_core = "0.2.0"
 ```
 
 ## License
@@ -16,6 +16,11 @@ skyak_axum_core = "0.1.0"
 This project is licensed under the MIT license.
 
 ## Changelog
+
+### 0.2.0
+
+- `success` and `error` response helpers
+- unit tests
 
 ### 0.1.0
 
