@@ -67,3 +67,45 @@ pub type ApiResponse<T> = Result<Json<T>, ApiError>;
 pub fn success<T>(data: T) -> ApiResponse<T> {
     Ok(Json(data))
 }
+
+/// Creates an error API response from an `ApiError`.
+///
+/// This helper function provides a convenient way to return error responses in route handlers.
+/// It wraps the provided `ApiError` in the appropriate `Result` type expected by the API.
+///
+/// # Arguments
+///
+/// * `error` - The `ApiError` instance representing the error condition.
+///
+/// # Returns
+///
+/// Returns an `ApiResponse<T>` containing the error.
+///
+/// # Examples
+///
+/// ```
+/// use skyak_axum_core::https::{ApiResponse, error, success};
+/// use skyak_axum_core::errors::ApiError;
+///
+/// // Return a not found error
+/// async fn handle_not_found() -> ApiResponse<()> {
+///     error(ApiError::NotFound(Some("User not found".to_string())))
+/// }
+///
+/// // Return an unauthorized error
+/// async fn handle_unauthorized() -> ApiResponse<String> {
+///     error(ApiError::Unauthorized(Some("Invalid token".to_string())))
+/// }
+///
+/// // Handling a result that might fail
+/// async fn handle_operation() -> ApiResponse<String> {
+///     let result = some_fallible_operation();
+///     match result {
+///         Ok(data) => success(data),
+///         Err(_) => error(ApiError::InternalServerError(None))
+///     }
+/// }
+/// ```
+pub fn error<T>(error: ApiError) -> ApiResponse<T> {
+    Err(error)
+}
