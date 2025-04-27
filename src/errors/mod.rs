@@ -40,7 +40,10 @@ pub enum ApiError {
 impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
         let (status, body) = match self {
-            ApiError::BadRequest(_) => (StatusCode::BAD_REQUEST, "Bad Request".to_string()),
+            ApiError::BadRequest(body) => (
+                StatusCode::BAD_REQUEST,
+                body.unwrap_or("Bad Request".to_string()),
+            ),
             ApiError::NotFound(body) => (
                 StatusCode::NOT_FOUND,
                 body.unwrap_or("Not Found".to_string()),
