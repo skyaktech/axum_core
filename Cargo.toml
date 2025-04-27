@@ -1,6 +1,6 @@
 [package]
 name = "skyak_axum_core"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 repository = "https://github.com/skyaktech/axum_core"
 authors = ["Nebojsa Jakovljevic nebojsa@nebjak.dev"]

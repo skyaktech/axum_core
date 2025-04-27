@@ -8,7 +8,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-skyak_axum_core = "0.2.0"
+skyak_axum_core = "0.2.1"
 ```
 
 ## License
@@ -16,6 +16,9 @@ skyak_axum_core = "0.2.0"
 This project is licensed under the MIT license.
 
 ## Changelog
+
+### 0.2.1
+- Fixed `BadRequest` error to include the `message` field in the response body.
 
 ### 0.2.0
 
