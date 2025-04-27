@@ -33,7 +33,7 @@ pub type ApiResponse<T> = Result<Json<T>, ApiError>;
 /// # Arguments
 ///
 /// * `data` - The data to be returned in the response. This can be any type that implements
-///            serialization traits required by `axum::Json`.
+///   serialization traits required by `axum::Json`.
 ///
 /// # Returns
 ///
