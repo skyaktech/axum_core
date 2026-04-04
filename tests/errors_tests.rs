@@ -17,7 +17,12 @@ async fn assert_error_response(error: ApiError, expected_status: StatusCode, exp
 
 #[tokio::test]
 async fn test_bad_request_default() {
-    assert_error_response(ApiError::BadRequest(None), StatusCode::BAD_REQUEST, "Bad Request").await;
+    assert_error_response(
+        ApiError::BadRequest(None),
+        StatusCode::BAD_REQUEST,
+        "Bad Request",
+    )
+    .await;
 }
 
 #[tokio::test]
@@ -37,13 +42,22 @@ async fn test_internal_server_error_default() {
 
 #[tokio::test]
 async fn test_unauthorized_default() {
-    assert_error_response(ApiError::Unauthorized(None), StatusCode::UNAUTHORIZED, "Unauthorized")
-        .await;
+    assert_error_response(
+        ApiError::Unauthorized(None),
+        StatusCode::UNAUTHORIZED,
+        "Unauthorized",
+    )
+    .await;
 }
 
 #[tokio::test]
 async fn test_forbidden_default() {
-    assert_error_response(ApiError::Forbidden(None), StatusCode::FORBIDDEN, "Forbidden").await;
+    assert_error_response(
+        ApiError::Forbidden(None),
+        StatusCode::FORBIDDEN,
+        "Forbidden",
+    )
+    .await;
 }
 
 #[tokio::test]
@@ -276,7 +290,10 @@ fn test_display_default() {
         ApiError::ServiceUnavailable(None).to_string(),
         "Service Unavailable"
     );
-    assert_eq!(ApiError::GatewayTimeout(None).to_string(), "Gateway Timeout");
+    assert_eq!(
+        ApiError::GatewayTimeout(None).to_string(),
+        "Gateway Timeout"
+    );
     assert_eq!(ApiError::Other(418, None).to_string(), "Other Error");
 }
 
