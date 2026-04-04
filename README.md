@@ -8,7 +8,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-skyak_axum_core = "0.2.1"
+skyak_axum_core = "0.3.0"
 ```
 
 ## License
@@ -16,6 +16,12 @@ skyak_axum_core = "0.2.1"
 This project is licensed under the MIT license.
 
 ## Changelog
+
+### 0.3.0
+
+- `Display` and `std::error::Error` trait implementations for `ApiError`
+- `UnprocessableEntity` (422) error variant
+- Comprehensive test suite
 
 ### 0.2.1
 - Fixed `BadRequest` error to include the `message` field in the response body.
