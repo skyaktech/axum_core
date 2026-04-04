@@ -1,3 +1,5 @@
+use std::fmt;
+
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use serde::Serialize;
@@ -31,56 +33,63 @@ pub enum ApiError {
     Unauthorized(Option<String>),
     Forbidden(Option<String>),
     Conflict(Option<String>),
+    UnprocessableEntity(Option<String>),
     TooManyRequests(Option<String>),
     ServiceUnavailable(Option<String>),
     GatewayTimeout(Option<String>),
     Other(u16, Option<String>),
 }
 
+impl fmt::Display for ApiError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ApiError::BadRequest(msg) => write!(f, "{}", msg.as_deref().unwrap_or("Bad Request")),
+            ApiError::NotFound(msg) => write!(f, "{}", msg.as_deref().unwrap_or("Not Found")),
+            ApiError::InternalServerError(msg) => {
+                write!(f, "{}", msg.as_deref().unwrap_or("Internal Server Error"))
+            }
+            ApiError::Unauthorized(msg) => {
+                write!(f, "{}", msg.as_deref().unwrap_or("Unauthorized"))
+            }
+            ApiError::Forbidden(msg) => write!(f, "{}", msg.as_deref().unwrap_or("Forbidden")),
+            ApiError::Conflict(msg) => write!(f, "{}", msg.as_deref().unwrap_or("Conflict")),
+            ApiError::UnprocessableEntity(msg) => {
+                write!(f, "{}", msg.as_deref().unwrap_or("Unprocessable Entity"))
+            }
+            ApiError::TooManyRequests(msg) => {
+                write!(f, "{}", msg.as_deref().unwrap_or("Too Many Requests"))
+            }
+            ApiError::ServiceUnavailable(msg) => {
+                write!(f, "{}", msg.as_deref().unwrap_or("Service Unavailable"))
+            }
+            ApiError::GatewayTimeout(msg) => {
+                write!(f, "{}", msg.as_deref().unwrap_or("Gateway Timeout"))
+            }
+            ApiError::Other(_, msg) => write!(f, "{}", msg.as_deref().unwrap_or("Other Error")),
+        }
+    }
+}
+
+impl std::error::Error for ApiError {}
+
 impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
-        let (status, body) = match self {
-            ApiError::BadRequest(body) => (
-                StatusCode::BAD_REQUEST,
-                body.unwrap_or("Bad Request".to_string()),
-            ),
-            ApiError::NotFound(body) => (
-                StatusCode::NOT_FOUND,
-                body.unwrap_or("Not Found".to_string()),
-            ),
-            ApiError::InternalServerError(body) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                body.unwrap_or("Internal Server Error".to_string()),
-            ),
-            ApiError::Unauthorized(body) => (
-                StatusCode::UNAUTHORIZED,
-                body.unwrap_or("Unauthorized".to_string()),
-            ),
-            ApiError::Forbidden(body) => (
-                StatusCode::FORBIDDEN,
-                body.unwrap_or("Forbidden".to_string()),
-            ),
-            ApiError::Conflict(body) => {
-                (StatusCode::CONFLICT, body.unwrap_or("Conflict".to_string()))
+        let status = match &self {
+            ApiError::BadRequest(_) => StatusCode::BAD_REQUEST,
+            ApiError::NotFound(_) => StatusCode::NOT_FOUND,
+            ApiError::InternalServerError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            ApiError::Unauthorized(_) => StatusCode::UNAUTHORIZED,
+            ApiError::Forbidden(_) => StatusCode::FORBIDDEN,
+            ApiError::Conflict(_) => StatusCode::CONFLICT,
+            ApiError::UnprocessableEntity(_) => StatusCode::UNPROCESSABLE_ENTITY,
+            ApiError::TooManyRequests(_) => StatusCode::TOO_MANY_REQUESTS,
+            ApiError::ServiceUnavailable(_) => StatusCode::SERVICE_UNAVAILABLE,
+            ApiError::GatewayTimeout(_) => StatusCode::GATEWAY_TIMEOUT,
+            ApiError::Other(code, _) => {
+                StatusCode::from_u16(*code).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR)
             }
-            ApiError::TooManyRequests(body) => (
-                StatusCode::TOO_MANY_REQUESTS,
-                body.unwrap_or("Too Many Requests".to_string()),
-            ),
-            ApiError::ServiceUnavailable(body) => (
-                StatusCode::SERVICE_UNAVAILABLE,
-                body.unwrap_or("Service Unavailable".to_string()),
-            ),
-            ApiError::GatewayTimeout(body) => (
-                StatusCode::GATEWAY_TIMEOUT,
-                body.unwrap_or("Gateway Timeout".to_string()),
-            ),
-            ApiError::Other(status, body) => (
-                StatusCode::from_u16(status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
-                body.unwrap_or("Other Error".to_string()),
-            ),
         };
 
-        (status, body).into_response()
+        (status, self.to_string()).into_response()
     }
 }
