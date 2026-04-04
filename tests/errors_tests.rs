@@ -52,6 +52,16 @@ async fn test_conflict_default() {
 }
 
 #[tokio::test]
+async fn test_unprocessable_entity_default() {
+    assert_error_response(
+        ApiError::UnprocessableEntity(None),
+        StatusCode::UNPROCESSABLE_ENTITY,
+        "Unprocessable Entity",
+    )
+    .await;
+}
+
+#[tokio::test]
 async fn test_too_many_requests_default() {
     assert_error_response(
         ApiError::TooManyRequests(None),
@@ -154,6 +164,16 @@ async fn test_conflict_custom() {
 }
 
 #[tokio::test]
+async fn test_unprocessable_entity_custom() {
+    assert_error_response(
+        ApiError::UnprocessableEntity(Some("Invalid email format".to_string())),
+        StatusCode::UNPROCESSABLE_ENTITY,
+        "Invalid email format",
+    )
+    .await;
+}
+
+#[tokio::test]
 async fn test_too_many_requests_custom() {
     assert_error_response(
         ApiError::TooManyRequests(Some("Rate limit exceeded".to_string())),
@@ -229,4 +249,53 @@ fn test_serialize() {
     let json = serde_json::to_string(&error).unwrap();
     assert!(json.contains("BadRequest"));
     assert!(json.contains("oops"));
+}
+
+// --- Display + Error traits ---
+
+#[test]
+fn test_display_default() {
+    assert_eq!(ApiError::BadRequest(None).to_string(), "Bad Request");
+    assert_eq!(ApiError::NotFound(None).to_string(), "Not Found");
+    assert_eq!(
+        ApiError::InternalServerError(None).to_string(),
+        "Internal Server Error"
+    );
+    assert_eq!(ApiError::Unauthorized(None).to_string(), "Unauthorized");
+    assert_eq!(ApiError::Forbidden(None).to_string(), "Forbidden");
+    assert_eq!(ApiError::Conflict(None).to_string(), "Conflict");
+    assert_eq!(
+        ApiError::UnprocessableEntity(None).to_string(),
+        "Unprocessable Entity"
+    );
+    assert_eq!(
+        ApiError::TooManyRequests(None).to_string(),
+        "Too Many Requests"
+    );
+    assert_eq!(
+        ApiError::ServiceUnavailable(None).to_string(),
+        "Service Unavailable"
+    );
+    assert_eq!(ApiError::GatewayTimeout(None).to_string(), "Gateway Timeout");
+    assert_eq!(ApiError::Other(418, None).to_string(), "Other Error");
+}
+
+#[test]
+fn test_display_custom() {
+    assert_eq!(
+        ApiError::NotFound(Some("user 42".to_string())).to_string(),
+        "user 42"
+    );
+    assert_eq!(
+        ApiError::Other(418, Some("teapot".to_string())).to_string(),
+        "teapot"
+    );
+}
+
+#[test]
+fn test_error_trait() {
+    let error = ApiError::NotFound(None);
+    let dyn_error: &dyn std::error::Error = &error;
+    assert_eq!(dyn_error.to_string(), "Not Found");
+    assert!(dyn_error.source().is_none());
 }
