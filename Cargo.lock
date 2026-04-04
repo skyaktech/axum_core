@@ -417,7 +417,9 @@ name = "skyak_axum_core"
 version = "0.2.1"
 dependencies = [
  "axum",
+ "http-body-util",
  "serde",
+ "serde_json",
  "tokio",
 ]
 
