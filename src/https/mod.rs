@@ -19,7 +19,7 @@ use axum::Json;
 /// }
 ///
 /// async fn error_route() -> ApiResponse<String> {
-///     Err(ApiError::NotFound(Some("Resource not found".to_string())))
+///     Err(ApiError::not_found("Resource not found"))
 /// }
 /// ```
 pub type ApiResponse<T> = Result<Json<T>, ApiError>;
@@ -84,17 +84,18 @@ pub fn success<T>(data: T) -> ApiResponse<T> {
 /// # Examples
 ///
 /// ```
+/// use axum::http::StatusCode;
 /// use skyak_axum_core::https::{ApiResponse, error, success};
 /// use skyak_axum_core::errors::ApiError;
 ///
 /// // Return a not found error
 /// async fn handle_not_found() -> ApiResponse<()> {
-///     error(ApiError::NotFound(Some("User not found".to_string())))
+///     error(ApiError::not_found("User not found"))
 /// }
 ///
 /// // Return an unauthorized error
 /// async fn handle_unauthorized() -> ApiResponse<String> {
-///     error(ApiError::Unauthorized(Some("Invalid token".to_string())))
+///     error(ApiError::unauthorized("Invalid token"))
 /// }
 ///
 /// // Handling a result that might fail
@@ -106,7 +107,7 @@ pub fn success<T>(data: T) -> ApiResponse<T> {
 ///     let result = some_fallible_operation();
 ///     match result {
 ///         Ok(data) => success(data),
-///         Err(_) => error(ApiError::InternalServerError(None))
+///         Err(_) => error(ApiError::new(StatusCode::INTERNAL_SERVER_ERROR))
 ///     }
 /// }
 /// ```

@@ -12,13 +12,9 @@ async fn test_success() {
 #[tokio::test]
 async fn test_error() {
     let error_message = "Test error";
-    let error = errors::ApiError::NotFound(Some(error_message.to_string()));
+    let error = errors::ApiError::not_found(error_message);
     let response: https::ApiResponse<String> = https::error(error);
 
     assert!(response.is_err());
-
-    match response.unwrap_err() {
-        errors::ApiError::NotFound(Some(msg)) => assert_eq!(msg, error_message),
-        _ => panic!("Expected NotFound error variant"),
-    }
+    assert_eq!(response.unwrap_err().message(), error_message);
 }
