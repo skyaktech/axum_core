@@ -3,7 +3,8 @@ name = "skyak_axum_core"
 version = "0.3.0"
 edition = "2021"
 repository = "https://github.com/skyaktech/axum_core"
-authors = ["Nebojsa Jakovljevic nebojsa@nebjak.dev"]
+authors = ["Nebojsa Jakovljevic <nebojsa@nebjak.dev>"]
+rust-version = "1.80"
 license = "MIT"
 description = "Core utilities and extensions for Axum web framework"
 keywords = ["axum", "web", "framework", "core"]
@@ -11,10 +12,10 @@ categories = ["web-programming"]
 readme = "README.md"
 
 [dependencies]
-axum = "0.8"
+axum = { version = "0.8", default-features = false, features = ["json", "query"] }
 serde = { version = "1.0", features = ["derive"] }
-tokio = "1"
 
 [dev-dependencies]
 http-body-util = "0.1"
 serde_json = "1.0"
+tokio = { version = "1", features = ["macros", "rt"] }
