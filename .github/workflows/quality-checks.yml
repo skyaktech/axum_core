@@ -16,27 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Cache Rust dependencies
-      - name: Cache Cargo registry
-        uses: actions/cache@v4
+      - uses: dtolnay/rust-toolchain@1.96.0
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
+          components: rustfmt, clippy
 
-      # Cache build outputs
-      - name: Cache build outputs
-        uses: actions/cache@v4
-        with:
-          path: |
-            target
-          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('**/Cargo.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-rust-
+      - uses: Swatinem/rust-cache@v2
 
       - name: Check formatting
         run: cargo fmt --all -- --check
@@ -50,12 +34,17 @@ jobs:
       - name: Run tests
         run: cargo test --verbose --all-features
 
-      # Save cargo build information for future runs
-      - name: Save build info
-        uses: actions/cache/save@v4
-        if: always()
-        with:
-          path: |
-            target
-            ~/.cargo
-          key: ${{ runner.os }}-rust-${{ github.sha }}
+      - name: Check without default features
+        run: cargo check --no-default-features
+
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@1.80.0
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Check on minimum supported Rust version
+        run: cargo check --all-features
