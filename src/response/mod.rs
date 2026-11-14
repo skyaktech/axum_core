@@ -1,7 +1,6 @@
 use crate::errors::ApiError;
-use axum::http::StatusCode;
+use axum::http::{header, StatusCode};
 use axum::response::{IntoResponse, Response};
-use axum::Json;
 use serde::Serialize;
 
 /// A successful API response: a status code and data rendered as a JSON body.
@@ -27,9 +26,19 @@ impl<T> ApiSuccess<T> {
 impl<T: Serialize> IntoResponse for ApiSuccess<T> {
     fn into_response(self) -> Response {
         if self.status == StatusCode::NO_CONTENT {
-            self.status.into_response()
-        } else {
-            (self.status, Json(self.data)).into_response()
+            return self.status.into_response();
+        }
+
+        // Serialize here instead of through `Json`: a status tuple would overwrite
+        // the 500 that `Json` produces when serialization fails.
+        match serde_json::to_vec(&self.data) {
+            Ok(body) => (
+                self.status,
+                [(header::CONTENT_TYPE, "application/json")],
+                body,
+            )
+                .into_response(),
+            Err(err) => ApiError::internal(err).into_response(),
         }
     }
 }
